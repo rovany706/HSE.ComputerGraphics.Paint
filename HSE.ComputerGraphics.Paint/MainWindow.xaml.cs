@@ -40,6 +40,7 @@ namespace HSE.ComputerGraphics.Paint
             if (canvas == null)
                 return;
 
+            
             HitTestResult hitTestResult = VisualTreeHelper.HitTest(canvas, e.GetPosition(canvas));
 
             if (currentSelection != null)
@@ -62,21 +63,21 @@ namespace HSE.ComputerGraphics.Paint
 
         private void MainCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-
-            float radius = 6;
             Canvas canvas = sender as Canvas;
             if (canvas == null)
                 return;
-            lbCursorPosition.Text = $"X:{e.GetPosition(canvas).X} Y:{e.GetPosition(canvas).Y}";
+            Point currentMousePosition = e.GetPosition(canvas);
 
+            lbMousePosition.Text = $"X: {currentMousePosition.X} Y:{currentMousePosition.Y}";
+
+            float radius = 6;
             if (isMousePressed && currentSelection != null)
             {
-                Point currentMousePosition = e.GetPosition(canvas);
                 Line line = currentSelection as Line;
 
                 bool isMouseNearBegin = Math.Pow(line.X1 - previousMousePosition.X, 2) + Math.Pow(line.Y1 - previousMousePosition.Y, 2) < Math.Pow(radius, 2);
                 bool isMouseNearEnd = Math.Pow(line.X2 - previousMousePosition.X, 2) + Math.Pow(line.Y2 - previousMousePosition.Y, 2) < Math.Pow(radius, 2);
-                Vector delta = previousMousePosition - e.GetPosition(canvas);
+                Vector delta = previousMousePosition - currentMousePosition;
 
                 if (isMouseNearBegin)
                 {
@@ -96,7 +97,7 @@ namespace HSE.ComputerGraphics.Paint
                     line.Y1 -= delta.Y;
                     line.Y2 -= delta.Y;
                 }
-                previousMousePosition = e.GetPosition(canvas);
+                previousMousePosition = currentMousePosition;
             }
         }
 
@@ -105,13 +106,22 @@ namespace HSE.ComputerGraphics.Paint
             isMousePressed = false;
         }
 
+        private void btnRemoveLine_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentSelection == null)
+                return;
+
+            MainCanvas.Children.Remove(currentSelection);
+            currentSelection = null;
+        }
+
         private Line GetRandomLine()
         {
             Random rand = new Random();
-            int randX1 = rand.Next(0, (int)Math.Round(MainCanvas.Width));
-            int randX2 = rand.Next(0, (int)Math.Round(MainCanvas.Width));
-            int randY1 = rand.Next(0, (int)Math.Round(MainCanvas.Height));
-            int randY2 = rand.Next(0, (int)Math.Round(MainCanvas.Height));
+            int randX1 = rand.Next(0, (int)Math.Round(MainCanvas.ActualWidth));
+            int randX2 = rand.Next(0, (int)Math.Round(MainCanvas.ActualWidth));
+            int randY1 = rand.Next(0, (int)Math.Round(MainCanvas.ActualHeight));
+            int randY2 = rand.Next(0, (int)Math.Round(MainCanvas.ActualHeight));
 
             Line newLine = new Line();
             newLine.X1 = randX1;
@@ -123,11 +133,9 @@ namespace HSE.ComputerGraphics.Paint
 
             newLine.HorizontalAlignment = HorizontalAlignment.Left;
             newLine.VerticalAlignment = VerticalAlignment.Center;
-            newLine.StrokeThickness = 2;
+            newLine.StrokeThickness = 4;
 
             return newLine;
         }
-
-
     }
 }
