@@ -39,7 +39,6 @@ namespace HSE.ComputerGraphics.Paint
             Canvas canvas = sender as Canvas;
             if (canvas == null)
                 return;
-
             
             HitTestResult hitTestResult = VisualTreeHelper.HitTest(canvas, e.GetPosition(canvas));
 
@@ -54,6 +53,7 @@ namespace HSE.ComputerGraphics.Paint
                 //Select new element
                 currentSelection = hitTestResult.VisualHit as Shape;
                 currentSelection.Stroke = Brushes.Red;
+                currentSelection.Cursor = Cursors.SizeAll;
             }
 
             //Save mouse position
@@ -66,19 +66,25 @@ namespace HSE.ComputerGraphics.Paint
             Canvas canvas = sender as Canvas;
             if (canvas == null)
                 return;
-            Point currentMousePosition = e.GetPosition(canvas);
 
+            Point currentMousePosition = e.GetPosition(canvas);
             lbMousePosition.Text = $"X: {currentMousePosition.X} Y:{currentMousePosition.Y}";
 
-            float radius = 6;
+            Line line = currentSelection as Line;
+            float radius = 10;
+            bool isMouseNearBegin = Math.Pow(line.X1 - previousMousePosition.X, 2) + Math.Pow(line.Y1 - previousMousePosition.Y, 2) < Math.Pow(radius, 2);
+            bool isMouseNearEnd = Math.Pow(line.X2 - previousMousePosition.X, 2) + Math.Pow(line.Y2 - previousMousePosition.Y, 2) < Math.Pow(radius, 2);
+
+            if (currentSelection != null)
+            {
+                if (isMouseNearBegin || isMouseNearEnd)
+                    line.Cursor = Cursors.SizeNWSE;
+                else
+                    line.Cursor = Cursors.SizeAll;
+            }
+
             if (isMousePressed && currentSelection != null)
             {
-                Line line = currentSelection as Line;
-
-                bool isMouseNearBegin = Math.Pow(line.X1 - previousMousePosition.X, 2) + Math.Pow(line.Y1 - previousMousePosition.Y, 2) < Math.Pow(radius, 2);
-                bool isMouseNearEnd = Math.Pow(line.X2 - previousMousePosition.X, 2) + Math.Pow(line.Y2 - previousMousePosition.Y, 2) < Math.Pow(radius, 2);
-                Vector delta = previousMousePosition - currentMousePosition;
-
                 if (isMouseNearBegin)
                 {
                     line.X1 = currentMousePosition.X;
@@ -92,13 +98,14 @@ namespace HSE.ComputerGraphics.Paint
                 else
                 {
                     //currentSelection.RenderTransform = new TranslateTransform(currentSelection.RenderTransform.Value.OffsetX - delta.X, currentSelection.RenderTransform.Value.OffsetY - delta.Y);
+                    Vector delta = previousMousePosition - currentMousePosition;
                     line.X1 -= delta.X;
                     line.X2 -= delta.X;
                     line.Y1 -= delta.Y;
                     line.Y2 -= delta.Y;
                 }
-                previousMousePosition = currentMousePosition;
             }
+            previousMousePosition = currentMousePosition;
         }
 
         private void MainCanvas_MouseUp(object sender, MouseButtonEventArgs e)
