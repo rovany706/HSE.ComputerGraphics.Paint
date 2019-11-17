@@ -52,13 +52,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Model\Line.cs" />
+    <Compile Include="Model\Canvas.cs" />
+    <Compile Include="Model\LineGroup.cs" />
+    <Compile Include="Model\MyLine.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Views\MainWindow.xaml">
+    <Compile Include="ViewModels\LineViewModel.cs" />
+    <Page Include="Views\AppView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
