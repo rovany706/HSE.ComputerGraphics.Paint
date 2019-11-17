@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Windows;
 using System.Windows.Documents;
+using System.Windows.Input;
 using System.Windows.Shapes;
 using Caliburn.Micro;
 using HSE.ComputerGraphics.Paint.Model;
@@ -28,6 +30,10 @@ namespace HSE.ComputerGraphics.Paint.ViewModels
         public void DrawNewLine()
         {
             Lines.Add(LineViewModel.CreateLineViewModel(Width, Height));
+        }
+        public void Click(Line line, MouseEventArgs args, object kek)
+        {
+            MessageBox.Show($"{line.X1}");
         }
     }
 }

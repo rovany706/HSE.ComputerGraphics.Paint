@@ -34,5 +34,9 @@ namespace HSE.ComputerGraphics.Paint.ViewModels
 
             return new LineViewModel {Line = newLine};
         }
+        public void Click()
+        {
+            MessageBox.Show("SOSITE");
+        }
     }
 }

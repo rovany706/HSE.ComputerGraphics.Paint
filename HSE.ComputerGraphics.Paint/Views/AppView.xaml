@@ -4,6 +4,8 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HSE.ComputerGraphics.Paint"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" 
+        xmlns:cal="http://www.caliburnproject.org"
         mc:Ignorable="d"
         Title="MainWindow" Height="600" Width="800">
   <Grid>
@@ -42,8 +44,11 @@
         <ItemsControl.ItemTemplate>
           <DataTemplate >
                         <Line X1="{Binding Line.X1}" Y1="{Binding Line.Y1}"
-                              X2="{Binding Line.X2}" Y2="{Binding Line.Y2}" Stroke="Black" StrokeThickness="2"/>
-          </DataTemplate>
+                              X2="{Binding Line.X2}" Y2="{Binding Line.Y2}" Stroke="Black" StrokeThickness="2" 
+                              cal:Message.Attach="[Event MouseDown] = [Action Click($source, $eventArgs, $executionContext)]"
+                              />
+                           
+                    </DataTemplate>
         </ItemsControl.ItemTemplate>
       </ItemsControl>
 
