@@ -25,16 +25,27 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <!-- Canvas -->
-                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="200" />
                 <!-- Buttons -->
             </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
 
-            <Canvas x:Name="MainCanvas" Grid.Column="0" MouseDown="MainCanvas_MouseDown" MouseMove="MainCanvas_MouseMove" MouseUp="MainCanvas_MouseUp" Background="White"/>
-            <GroupBox Grid.Column="1" BorderBrush="Gainsboro" Background="White" BorderThickness="1">
+            <Canvas x:Name="MainCanvas" Grid.Column="0" Grid.RowSpan="2" MouseDown="MainCanvas_MouseDown" MouseMove="MainCanvas_MouseMove" MouseUp="MainCanvas_MouseUp" Background="White"/>
+            <GroupBox Grid.Column="1" Grid.Row="0" BorderBrush="Gainsboro" Background="White" BorderThickness="1">
                 <GroupBox.Header>Actions</GroupBox.Header>
-                <StackPanel Width="100" Margin="10,0,0,0" >
+                <StackPanel Margin="10,0,0,0" >
                     <Button x:Name="btnAddLine" Content="Add line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="btnAddLine_Click"/>
                     <Button x:Name="btnRemoveLine" Content="Remove line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="btnRemoveLine_Click"/>
+                </StackPanel>
+            </GroupBox>
+
+            <GroupBox Grid.Column="1" Grid.Row="1" BorderBrush="Gainsboro" Background="White" BorderThickness="1">
+                <GroupBox.Header>Properties</GroupBox.Header>
+                <StackPanel>
+                    <TextBlock x:Name="lbEquation" TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </GroupBox>
         </Grid>

@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using HSE.ComputerGraphics.Paint.UI;
 
 namespace HSE.ComputerGraphics.Paint
 {
@@ -47,13 +48,15 @@ namespace HSE.ComputerGraphics.Paint
                 //Deselect old element
                 currentSelection.Stroke = Brushes.Black;
                 currentSelection = null;
+                lbEquation.Text = String.Empty;
             }
             if (hitTestResult.VisualHit is Shape)
             {
                 //Select new element
                 currentSelection = hitTestResult.VisualHit as Shape;
                 currentSelection.Stroke = Brushes.Red;
-                currentSelection.Cursor = Cursors.SizeAll;
+
+                lbEquation.Text = $"Уравнение: {((Line)currentSelection).GetLineConstants()}";
             }
 
             //Save mouse position
@@ -70,39 +73,42 @@ namespace HSE.ComputerGraphics.Paint
             Point currentMousePosition = e.GetPosition(canvas);
             lbMousePosition.Text = $"X: {currentMousePosition.X} Y:{currentMousePosition.Y}";
 
-            Line line = currentSelection as Line;
-            float radius = 10;
-            bool isMouseNearBegin = Math.Pow(line.X1 - previousMousePosition.X, 2) + Math.Pow(line.Y1 - previousMousePosition.Y, 2) < Math.Pow(radius, 2);
-            bool isMouseNearEnd = Math.Pow(line.X2 - previousMousePosition.X, 2) + Math.Pow(line.Y2 - previousMousePosition.Y, 2) < Math.Pow(radius, 2);
-
             if (currentSelection != null)
             {
+                Line line = currentSelection as Line;
+
+                lbEquation.Text = $"Уравнение: {line.GetLineConstants()}";
+
+                float radius = 10;
+                bool isMouseNearBegin = Math.Pow(line.X1 - previousMousePosition.X, 2) + Math.Pow(line.Y1 - previousMousePosition.Y, 2) < Math.Pow(radius, 2);
+                bool isMouseNearEnd = Math.Pow(line.X2 - previousMousePosition.X, 2) + Math.Pow(line.Y2 - previousMousePosition.Y, 2) < Math.Pow(radius, 2);
+
                 if (isMouseNearBegin || isMouseNearEnd)
                     line.Cursor = Cursors.SizeNWSE;
                 else
                     line.Cursor = Cursors.SizeAll;
-            }
 
-            if (isMousePressed && currentSelection != null)
-            {
-                if (isMouseNearBegin)
+                if (isMousePressed)
                 {
-                    line.X1 = currentMousePosition.X;
-                    line.Y1 = currentMousePosition.Y;
-                }
-                else if (isMouseNearEnd)
-                {
-                    line.X2 = currentMousePosition.X;
-                    line.Y2 = currentMousePosition.Y;
-                }
-                else
-                {
-                    //currentSelection.RenderTransform = new TranslateTransform(currentSelection.RenderTransform.Value.OffsetX - delta.X, currentSelection.RenderTransform.Value.OffsetY - delta.Y);
-                    Vector delta = previousMousePosition - currentMousePosition;
-                    line.X1 -= delta.X;
-                    line.X2 -= delta.X;
-                    line.Y1 -= delta.Y;
-                    line.Y2 -= delta.Y;
+                    if (isMouseNearBegin)
+                    {
+                        line.X1 = currentMousePosition.X;
+                        line.Y1 = currentMousePosition.Y;
+                    }
+                    else if (isMouseNearEnd)
+                    {
+                        line.X2 = currentMousePosition.X;
+                        line.Y2 = currentMousePosition.Y;
+                    }
+                    else
+                    {
+                        //currentSelection.RenderTransform = new TranslateTransform(currentSelection.RenderTransform.Value.OffsetX - delta.X, currentSelection.RenderTransform.Value.OffsetY - delta.Y);
+                        Vector delta = previousMousePosition - currentMousePosition;
+                        line.X1 -= delta.X;
+                        line.X2 -= delta.X;
+                        line.Y1 -= delta.Y;
+                        line.Y2 -= delta.Y;
+                    }
                 }
             }
             previousMousePosition = currentMousePosition;
@@ -141,6 +147,7 @@ namespace HSE.ComputerGraphics.Paint
             newLine.HorizontalAlignment = HorizontalAlignment.Left;
             newLine.VerticalAlignment = VerticalAlignment.Center;
             newLine.StrokeThickness = 4;
+            newLine.Cursor = Cursors.SizeAll;
 
             return newLine;
         }
