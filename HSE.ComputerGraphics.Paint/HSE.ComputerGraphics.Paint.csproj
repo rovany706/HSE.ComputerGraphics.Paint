@@ -55,6 +55,7 @@
     <Compile Include="Model\Canvas.cs" />
     <Compile Include="Model\LineGroup.cs" />
     <Compile Include="Model\MyLine.cs" />
+    <Compile Include="SizeObserver.cs" />
     <Compile Include="ViewModels\AppViewModel.cs" />
     <ApplicationDefinition Include="App.xaml">
       <Generator>MSBuild:Compile</Generator>

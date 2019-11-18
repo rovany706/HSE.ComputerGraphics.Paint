@@ -21,12 +21,6 @@ namespace HSE.ComputerGraphics.Paint.ViewModels
 
         public double Height { get; set; }
 
-        public AppViewModel()
-        {
-            Height = 600;
-            Width = 800;
-        }
-
         public void DrawNewLine()
         {
             Lines.Add(LineViewModel.CreateLineViewModel(Width, Height));

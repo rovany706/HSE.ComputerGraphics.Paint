@@ -15,14 +15,6 @@ namespace HSE.ComputerGraphics.Paint.Model
 
         //public BindableCollection<LineGroup> LineGroups { get; set; } = new BindableCollection<LineGroup>();
 
-        //
-
-        public Canvas()
-        {
-            //this.width = width;
-            //this.height = height;
-        }
-
         public void AddNewRandomLine(double width, double height)
         {
             Random rand = new Random();

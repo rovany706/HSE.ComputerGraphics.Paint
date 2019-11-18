@@ -14,14 +14,6 @@ namespace HSE.ComputerGraphics.Paint.ViewModels
     {
         public Line Line { get; set; }
 
-        // change begin end
-
-        protected override void OnActivate()
-        {
-            MessageBox.Show("Page Two Activated"); //Don't do this in a real VM.
-            base.OnActivate();
-        }
-
         public static LineViewModel CreateLineViewModel(double width, double height)
         {
             Random rand = new Random();
@@ -33,10 +25,6 @@ namespace HSE.ComputerGraphics.Paint.ViewModels
             Line newLine = new Line { X1 = randX1, Y1 = randY1, X2 = randX2, Y2 = randY2 };
 
             return new LineViewModel {Line = newLine};
-        }
-        public void Click()
-        {
-            MessageBox.Show("SOSITE");
         }
     }
 }
