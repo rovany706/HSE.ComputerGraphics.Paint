@@ -10,7 +10,6 @@ using Caliburn.Micro;
 using HSE.ComputerGraphics.Paint.Model;
 using HSE.ComputerGraphics.Paint.Views;
 
-
 namespace HSE.ComputerGraphics.Paint.ViewModels
 {
     public class AppViewModel : Conductor<object>
@@ -21,12 +20,17 @@ namespace HSE.ComputerGraphics.Paint.ViewModels
 
         public double Height { get; set; }
 
+        public int PanelX { get; set; }
+
+        public int PanelY { get; set; }
+
         public void DrawNewLine()
         {
             Lines.Add(LineViewModel.CreateLineViewModel(Width, Height));
         }
-        public void Click(Line line, MouseEventArgs args, object kek)
+        public void Click(Line line, object view, MouseEventArgs e)
         {
+            //Point currentMousePosition = e.GetPosition(view.MainCanvas);
             MessageBox.Show($"{line.X1}");
         }
     }

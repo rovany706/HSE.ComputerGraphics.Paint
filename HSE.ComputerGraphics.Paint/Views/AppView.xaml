@@ -41,14 +41,14 @@
                         <Canvas Background="White" x:Name="MainCanvas" 
                                 local:SizeObserver.Observe="True"
                                 local:SizeObserver.ObservedWidth="{Binding Width, Mode=OneWayToSource}"
-                                local:SizeObserver.ObservedHeight="{Binding Height, Mode=OneWayToSource}"/>
+                                local:SizeObserver.ObservedHeight="{Binding Height, Mode=OneWayToSource}" />
                     </ItemsPanelTemplate>
                 </ItemsControl.ItemsPanel>
                 <ItemsControl.ItemTemplate>
                     <DataTemplate>
                         <Line X1="{Binding Line.X1}" Y1="{Binding Line.Y1}"
                               X2="{Binding Line.X2}" Y2="{Binding Line.Y2}" Stroke="Black" StrokeThickness="2" 
-                              cal:Message.Attach="[Event MouseDown] = [Action Click($source, $eventArgs, $executionContext)]"
+                              cal:Message.Attach="[Event MouseDown] = [Action Click($source, $view, $eventArgs)]"
                               />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>
