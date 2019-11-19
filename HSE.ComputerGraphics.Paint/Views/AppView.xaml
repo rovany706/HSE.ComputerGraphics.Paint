@@ -48,7 +48,7 @@
                     <DataTemplate>
                         <Line X1="{Binding Line.X1}" Y1="{Binding Line.Y1}"
                               X2="{Binding Line.X2}" Y2="{Binding Line.Y2}" Stroke="Black" StrokeThickness="2" 
-                              cal:Message.Attach="[Event MouseDown] = [Action Click($source, $view, $eventArgs)]"
+                              cal:Message.Attach="[Event MouseDown] = [Action Click($source, $view, $eventArgs, $mousepoint)]"
                               />
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

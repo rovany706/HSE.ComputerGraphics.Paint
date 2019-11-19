@@ -8,6 +8,7 @@ using System.ComponentModel.Composition;
 using System.ComponentModel.Composition.Hosting;
 using System.ComponentModel.Composition.Primitives;
 using HSE.ComputerGraphics.Paint.ViewModels;
+using System.Windows.Input;
 
 namespace HSE.ComputerGraphics.Paint
 {
@@ -35,6 +36,17 @@ namespace HSE.ComputerGraphics.Paint
             //batch.AddExportedValue(container);
             // pizdec
             //container.Compose(batch);
+
+            MessageBinder.SpecialValues.Add("$mousepoint", ctx =>
+            {
+                var e = ctx.EventArgs as MouseEventArgs;
+                if (e == null)
+                {
+                    return null;
+                }
+
+                return e.GetPosition(ctx.Source);
+            });
         }
         protected override void OnStartup(object sender, System.Windows.StartupEventArgs e)
         {

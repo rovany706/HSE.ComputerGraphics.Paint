@@ -28,9 +28,8 @@ namespace HSE.ComputerGraphics.Paint.ViewModels
         {
             Lines.Add(LineViewModel.CreateLineViewModel(Width, Height));
         }
-        public void Click(Line line, object view, MouseEventArgs e)
+        public void Click(Line line, AppView view, MouseEventArgs e, Point mousePoint)
         {
-            //Point currentMousePosition = e.GetPosition(view.MainCanvas);
             MessageBox.Show($"{line.X1}");
         }
     }
