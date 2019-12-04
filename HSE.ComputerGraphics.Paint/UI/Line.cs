@@ -29,10 +29,9 @@ namespace HSE.ComputerGraphics.Paint.UI
     {
         public static LineConsants GetLineConstants(this Line line)
         {
-            double A = line.Y1 - line.Y2;
-            double B = line.X2 - line.X1;
-            double C = line.X1 * line.Y2 - line.Y1 * line.X2;
-
+            double A = line.Y2 - line.Y1;
+            double B = - (line.X2 - line.X1);
+            double C =((line.Y2-line.Y1)*(-line.X1)-(line.X2-line.X1)*(-line.Y1));
             return new LineConsants(A, B, C);
         }
     }
