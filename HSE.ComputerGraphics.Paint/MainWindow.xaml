@@ -34,8 +34,8 @@
                 <GroupBox.Header>Actions</GroupBox.Header>
                 <StackPanel Margin="10,0,0,0" >
                     <Button x:Name="btnAddLine" Content="Add line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnAddLine_Click" Height="58"/>
-                    <Button x:Name="btnRemoveLine" Content="Remove line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnRemoveLine_Click" Height="58
-                            "/>
+                    <Button x:Name="btnRemoveLine" Content="Remove line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnRemoveLine_Click" Height="58"/>
+                    <Button x:Name="btnShowAxes" Content="Show Axes" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" MouseDown="btnShowAxes_Click" MouseUp="btnHideAxes_Click" Height="58"/>
                 </StackPanel>
             </GroupBox>
 

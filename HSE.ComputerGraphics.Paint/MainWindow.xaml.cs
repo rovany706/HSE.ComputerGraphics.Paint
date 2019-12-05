@@ -24,10 +24,31 @@ namespace HSE.ComputerGraphics.Paint
         private Shape currentSelection;
         private Point previousMousePosition;
         private bool isMousePressed;
+        private Line lineX;
+        private Line lineY;
 
         public MainWindow()
         {
             InitializeComponent();
+            lineX = new Line
+            {
+                X1 = 3,
+                X2 = 700,
+                Y1 = 3,
+                Y2 = 3,
+                Stroke = Brushes.DarkBlue,
+                StrokeThickness = 10
+            };
+
+            lineY = new Line
+            {
+                X1 = 3,
+                X2 = 3,
+                Y1 = 3,
+                Y2 = 600,
+                Stroke = Brushes.DarkBlue,
+                StrokeThickness = 10
+            };
         }
 
         private void btnAddLine_Click(object sender, RoutedEventArgs e)
@@ -129,6 +150,20 @@ namespace HSE.ComputerGraphics.Paint
             lbEquation.Text = "";
         }
 
+        private void btnShowAxes_Click(object sender, MouseButtonEventArgs e)
+        {
+            MainCanvas.Children.Add(lineX);
+            MainCanvas.Children.Add(lineY);
+        }
+
+        private void btnHideAxes_Click(object sender, MouseButtonEventArgs e)
+        {
+
+
+            MainCanvas.Children.Remove(lineX);
+            MainCanvas.Children.Remove(lineY);
+        }
+
         private Line GetRandomLine()
         {
             Random rand = new Random();
@@ -137,20 +172,23 @@ namespace HSE.ComputerGraphics.Paint
             int randY1 = rand.Next(0, (int)Math.Round(MainCanvas.ActualHeight));
             int randY2 = rand.Next(0, (int)Math.Round(MainCanvas.ActualHeight));
 
-            Line newLine = new Line();
-            newLine.X1 = randX1;
-            newLine.Y1 = randY1;
-            newLine.X2 = randX2;
-            newLine.Y2 = randY2;
+            Line newLine = new Line
+            {
+                X1 = randX1,
+                Y1 = randY1,
+                X2 = randX2,
+                Y2 = randY2,
+                Stroke = Brushes.Black,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Center,
+                StrokeThickness = 4,
+                Cursor = Cursors.SizeAll
+            };
 
-            newLine.Stroke = Brushes.Black;
 
-            newLine.HorizontalAlignment = HorizontalAlignment.Left;
-            newLine.VerticalAlignment = VerticalAlignment.Center;
-            newLine.StrokeThickness = 4;
-            newLine.Cursor = Cursors.SizeAll;
 
             return newLine;
         }
+        
     }
 }
