@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:HSE.ComputerGraphics.Paint"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800">
+        Title="МАГИЧИСКАЯ ПРОГА" Height="600" Width="965.574">
     <Grid>
 
         <Grid.RowDefinitions>
@@ -16,16 +16,12 @@
             <RowDefinition Height="Auto" />
             <!-- Status Bar -->
         </Grid.RowDefinitions>
-
-        <Menu Grid.Row="0">
-            <MenuItem Header="asdasd"></MenuItem>
-        </Menu>
         <Grid Grid.Row="1">
 
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition />
                 <!-- Canvas -->
-                <ColumnDefinition Width="200" />
+                <ColumnDefinition Width="237" />
                 <!-- Buttons -->
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
@@ -33,16 +29,17 @@
                 <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Canvas x:Name="MainCanvas" Grid.Column="0" Grid.RowSpan="2" MouseDown="MainCanvas_MouseDown" MouseMove="MainCanvas_MouseMove" MouseUp="MainCanvas_MouseUp" Background="White"/>
-            <GroupBox Grid.Column="1" Grid.Row="0" BorderBrush="Gainsboro" Background="White" BorderThickness="1">
+            <Canvas x:Name="MainCanvas" Grid.Column="0" Grid.RowSpan="2" MouseDown="MainCanvas_MouseDown" MouseMove="MainCanvas_MouseMove" MouseUp="MainCanvas_MouseUp" Background="White" Margin="0,0,39,0"/>
+            <GroupBox Grid.Row="0" BorderBrush="Gainsboro" Background="White" BorderThickness="1" Grid.Column="1">
                 <GroupBox.Header>Actions</GroupBox.Header>
                 <StackPanel Margin="10,0,0,0" >
-                    <Button x:Name="btnAddLine" Content="Add line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="btnAddLine_Click"/>
-                    <Button x:Name="btnRemoveLine" Content="Remove line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="75" Click="btnRemoveLine_Click"/>
+                    <Button x:Name="btnAddLine" Content="Add line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnAddLine_Click" Height="58"/>
+                    <Button x:Name="btnRemoveLine" Content="Remove line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnRemoveLine_Click" Height="58
+                            "/>
                 </StackPanel>
             </GroupBox>
 
-            <GroupBox Grid.Column="1" Grid.Row="1" BorderBrush="Gainsboro" Background="White" BorderThickness="1">
+            <GroupBox Grid.Row="1" BorderBrush="Gainsboro" Background="White" BorderThickness="1" Grid.Column="1">
                 <GroupBox.Header>Properties</GroupBox.Header>
                 <StackPanel>
                     <TextBlock x:Name="lbEquation" TextWrapping="WrapWithOverflow" />

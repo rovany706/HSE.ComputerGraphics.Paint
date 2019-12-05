@@ -126,6 +126,7 @@ namespace HSE.ComputerGraphics.Paint
 
             MainCanvas.Children.Remove(currentSelection);
             currentSelection = null;
+            lbEquation.Text = "";
         }
 
         private Line GetRandomLine()
