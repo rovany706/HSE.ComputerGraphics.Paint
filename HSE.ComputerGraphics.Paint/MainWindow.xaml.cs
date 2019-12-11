@@ -16,39 +16,15 @@ using HSE.ComputerGraphics.Paint.UI;
 
 namespace HSE.ComputerGraphics.Paint
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private Shape currentSelection;
         private Point previousMousePosition;
         private bool isMousePressed;
-        private Line lineX;
-        private Line lineY;
 
         public MainWindow()
         {
             InitializeComponent();
-            lineX = new Line
-            {
-                X1 = 3,
-                X2 = 700,
-                Y1 = 3,
-                Y2 = 3,
-                Stroke = Brushes.DarkBlue,
-                StrokeThickness = 10
-            };
-
-            lineY = new Line
-            {
-                X1 = 3,
-                X2 = 3,
-                Y1 = 3,
-                Y2 = 600,
-                Stroke = Brushes.DarkBlue,
-                StrokeThickness = 10
-            };
         }
 
         private void btnAddLine_Click(object sender, RoutedEventArgs e)
@@ -61,7 +37,7 @@ namespace HSE.ComputerGraphics.Paint
             Canvas canvas = sender as Canvas;
             if (canvas == null)
                 return;
-            
+
             HitTestResult hitTestResult = VisualTreeHelper.HitTest(canvas, e.GetPosition(canvas));
 
             if (currentSelection != null)
@@ -92,7 +68,9 @@ namespace HSE.ComputerGraphics.Paint
                 return;
 
             Point currentMousePosition = e.GetPosition(canvas);
-            lbMousePosition.Text = $"X: {currentMousePosition.X} Y:{currentMousePosition.Y}";
+
+            Point cartesianPosition = ConvertToCartesianCoords(MainCanvas, currentMousePosition);
+            lbMousePosition.Text = $"X: {cartesianPosition.X} Y:{cartesianPosition.Y}";
 
             if (currentSelection != null)
             {
@@ -123,7 +101,6 @@ namespace HSE.ComputerGraphics.Paint
                     }
                     else
                     {
-                        //currentSelection.RenderTransform = new TranslateTransform(currentSelection.RenderTransform.Value.OffsetX - delta.X, currentSelection.RenderTransform.Value.OffsetY - delta.Y);
                         Vector delta = previousMousePosition - currentMousePosition;
                         line.X1 -= delta.X;
                         line.X2 -= delta.X;
@@ -150,20 +127,6 @@ namespace HSE.ComputerGraphics.Paint
             lbEquation.Text = "";
         }
 
-        private void btnShowAxes_Click(object sender, MouseButtonEventArgs e)
-        {
-            MainCanvas.Children.Add(lineX);
-            MainCanvas.Children.Add(lineY);
-        }
-
-        private void btnHideAxes_Click(object sender, MouseButtonEventArgs e)
-        {
-
-
-            MainCanvas.Children.Remove(lineX);
-            MainCanvas.Children.Remove(lineY);
-        }
-
         private Line GetRandomLine()
         {
             Random rand = new Random();
@@ -181,14 +144,23 @@ namespace HSE.ComputerGraphics.Paint
                 Stroke = Brushes.Black,
                 HorizontalAlignment = HorizontalAlignment.Left,
                 VerticalAlignment = VerticalAlignment.Center,
-                StrokeThickness = 4,
+                StrokeThickness = 2,
                 Cursor = Cursors.SizeAll
             };
 
-
-
             return newLine;
         }
-        
+
+        private void MainCanvas_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            AxesDrawer.RemoveAxes(canvas: MainCanvas);
+            AxesDrawer.DrawAxes(canvas: MainCanvas);
+        }
+
+        private Point ConvertToCartesianCoords(Canvas canvas, Point point)
+        {
+            Point output = new Point(point.X, canvas.ActualHeight - point.Y);
+            return output;
+        }
     }
 }
