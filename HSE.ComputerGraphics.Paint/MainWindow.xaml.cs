@@ -162,5 +162,19 @@ namespace HSE.ComputerGraphics.Paint
             Point output = new Point(point.X, canvas.ActualHeight - point.Y);
             return output;
         }
+
+        private void btnLmao_Click(object sender, RoutedEventArgs e)
+        {
+            MediaElement myMediaElement = new MediaElement();
+            myMediaElement.Source = new Uri("Resources\\ricardo.mp4", UriKind.Relative);
+            myMediaElement.IsMuted = false;
+
+            VisualBrush myVisualBrush = new VisualBrush();
+            myVisualBrush.Viewport = new Rect(0, 0, 0.5, 0.5);
+            myVisualBrush.TileMode = TileMode.Tile;
+            myVisualBrush.Visual = myMediaElement;
+
+            MainCanvas.Background = myVisualBrush;
+        }
     }
 }

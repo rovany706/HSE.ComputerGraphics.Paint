@@ -48,12 +48,14 @@
                         </DrawingBrush.Drawing>
                     </DrawingBrush>
                 </Canvas.Background>
+
             </Canvas>
             <GroupBox Grid.Row="0" BorderBrush="Gainsboro" Background="White" BorderThickness="1" Grid.Column="1">
                 <GroupBox.Header>Actions</GroupBox.Header>
                 <StackPanel Margin="10,0,0,0" >
                     <Button x:Name="btnAddLine" Content="Add line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnAddLine_Click" />
                     <Button x:Name="btnRemoveLine" Content="Remove line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnRemoveLine_Click" />
+                    <Button x:Name="btnLmao" Content="lmao" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnLmao_Click" />
                 </StackPanel>
             </GroupBox>
 
