@@ -10,6 +10,7 @@ using System.Windows.Shapes;
 
 namespace HSE.ComputerGraphics.Paint.UI
 {
+    [Serializable]
     public class MyLine : ICanvasObject, ICloneable
     {
         public Line Line { get; set; }

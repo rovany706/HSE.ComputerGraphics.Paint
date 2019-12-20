@@ -9,6 +9,7 @@ using System.Windows.Shapes;
 
 namespace HSE.ComputerGraphics.Paint.UI
 {
+    [Serializable]
     public class LineGroup : ICanvasObject
     {
         public List<MyLine> Lines { get; set; }

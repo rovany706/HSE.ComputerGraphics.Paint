@@ -19,6 +19,14 @@
             <RowDefinition Height="Auto" />
             <!-- Status Bar -->
         </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="File">
+                <MenuItem x:Name="menuLoad" Header="Load" Click="menuLoad_Click"></MenuItem>
+                <MenuItem x:Name="menuSave" Header="Save" Click="menuSave_Click"></MenuItem>
+            </MenuItem>
+        </Menu>
+
         <Grid Grid.Row="1">
 
             <Grid.ColumnDefinitions>
@@ -81,7 +89,9 @@
                 <StackPanel>
                     <Button x:Name="btnMorphingFirstLine" Content="1 line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnMorphingFirstLine_Click" />
                     <Button x:Name="btnMorphingSecondLine" Content="2 line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnMorphingSecondLine_Click" />
+                    <Button x:Name="btnMorphingBegin" Content="Begin" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnMorphingBegin_Click" />
                     <Button x:Name="btnMorphingReset" Content="Reset" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnMorphingReset_Click" />
+                    <Slider x:Name="sliderMorphing" Minimum="0" Maximum="1" Value="0"  ValueChanged="sliderMorphing_ValueChanged"/>
                 </StackPanel>
             </GroupBox>
         </Grid>

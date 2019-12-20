@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using HSE.ComputerGraphics.Paint.UI;
+using Microsoft.Win32;
 
 namespace HSE.ComputerGraphics.Paint
 {
@@ -27,11 +28,25 @@ namespace HSE.ComputerGraphics.Paint
         private bool isMousePressed;
         private bool medianMode;
         private bool heightMode;
+        private Line firstMorphingLine;
+        private Line secondMorphingLine;
         private Line morphingLine;
+        private LinearGradientBrush myLinearGradientBrush = new LinearGradientBrush();
 
         public MainWindow()
         {
             InitializeComponent();
+
+            myLinearGradientBrush.StartPoint = new Point(0, 0);
+            myLinearGradientBrush.EndPoint = new Point(1, 1);
+            myLinearGradientBrush.GradientStops.Add(
+                new GradientStop(Colors.Yellow, 0.0));
+            myLinearGradientBrush.GradientStops.Add(
+                new GradientStop(Colors.Red, 0.25));
+            myLinearGradientBrush.GradientStops.Add(
+                new GradientStop(Colors.Blue, 0.75));
+            myLinearGradientBrush.GradientStops.Add(
+                new GradientStop(Colors.LimeGreen, 1.0));
         }
 
         private void btnAddLine_Click(object sender, RoutedEventArgs e)
@@ -82,6 +97,8 @@ namespace HSE.ComputerGraphics.Paint
 
             if (hitTestResult.VisualHit is Line selectedLine)
             {
+                if (morphingLine!= null && selectedLine == morphingLine)
+                    return;
                 ICanvasObject myLine = lines[selectedLine];
 
                 if (Keyboard.IsKeyDown(Key.LeftCtrl) == false)
@@ -298,15 +315,83 @@ namespace HSE.ComputerGraphics.Paint
 
         private void btnMorphingFirstLine_Click(object sender, RoutedEventArgs e)
         {
+            firstMorphingLine = lastClickedLine;
+            btnMorphingFirstLine.Background = Brushes.LawnGreen;
 
         }
 
         private void btnMorphingSecondLine_Click(object sender, RoutedEventArgs e)
         {
-
+            secondMorphingLine = lastClickedLine;
+            btnMorphingSecondLine.Background = Brushes.LawnGreen;
         }
 
         private void btnMorphingReset_Click(object sender, RoutedEventArgs e)
+        {
+            firstMorphingLine = null;
+            secondMorphingLine = null;
+            btnMorphingFirstLine.ClearValue(Button.BackgroundProperty);
+            btnMorphingSecondLine.ClearValue(Button.BackgroundProperty);
+
+            MainCanvas.Children.Remove(morphingLine);
+            morphingLine = null;
+        }
+
+        private void sliderMorphing_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            if (firstMorphingLine != null && secondMorphingLine != null && morphingLine != null)
+            {
+                morphingLine.X1 = MorphingValue(firstMorphingLine.X1, secondMorphingLine.X1, sliderMorphing.Value);
+                morphingLine.Y1 = MorphingValue(firstMorphingLine.Y1, secondMorphingLine.Y1, sliderMorphing.Value);
+                morphingLine.X2 = MorphingValue(firstMorphingLine.X2, secondMorphingLine.X2, sliderMorphing.Value);
+                morphingLine.Y2 = MorphingValue(firstMorphingLine.Y2, secondMorphingLine.Y2, sliderMorphing.Value);
+            }
+        }
+
+        private void btnMorphingBegin_Click(object sender, RoutedEventArgs e)
+        {
+            if (firstMorphingLine != null && secondMorphingLine != null)
+            {
+                morphingLine = new Line
+                {
+                    X1 = firstMorphingLine.X1,
+                    Y1 = firstMorphingLine.Y1,
+                    X2 = firstMorphingLine.X2,
+                    Y2 = firstMorphingLine.Y2,
+                    Stroke = myLinearGradientBrush,
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    VerticalAlignment = VerticalAlignment.Center,
+                    StrokeThickness = 2
+                };
+
+                MainCanvas.Children.Add(morphingLine);
+            }            
+        }
+
+        private double MorphingValue(double begin, double end, double t)
+        {
+            return begin * (1 - t) + end * t;
+        }
+
+        private void menuLoad_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+            if(ofd.ShowDialog() == true)
+            {
+
+            }
+        }
+
+        private void menuSave_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            if (sfd.ShowDialog() == true)
+            {
+                SaveScene(sfd.FileName);
+            }
+        }
+
+        private void SaveScene(string filename)
         {
 
         }
