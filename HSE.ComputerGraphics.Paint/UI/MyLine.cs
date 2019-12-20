@@ -11,12 +11,47 @@ using System.Windows.Shapes;
 namespace HSE.ComputerGraphics.Paint.UI
 {
     [Serializable]
-    public class MyLine : ICanvasObject, ICloneable
+    public class MyLine : ICanvasObject
     {
-        public Line Line { get; set; }
+        [NonSerialized]
+        public Line Line;
         public LineGroup Group { get; set; }
         public bool IsSelected { get; set; }
-        public bool Z { get; set; }
+        public double X1 { get; set; }
+        public double Y1 { get; set; }
+        public double X2 { get; set; }
+        public double Y2 { get; set; }
+
+        public MyLine()
+        {
+
+        }
+
+        public void SetLineValues()
+        {
+            Line = new Line
+            {
+                X1 = X1,
+                Y1 = Y1,
+                X2 = X2,
+                Y2 = Y2,
+                Stroke = Brushes.Black,
+                HorizontalAlignment = HorizontalAlignment.Left,
+                VerticalAlignment = VerticalAlignment.Center,
+                StrokeThickness = 2,
+                Cursor = Cursors.SizeAll
+            };
+
+        }
+
+        public MyLine(Line line)
+        {
+            Line = line;
+            X1 = line.X1;
+            Y1 = line.Y1;
+            X2 = line.X2;
+            Y2 = line.Y2;
+        }
 
         public override int GetHashCode()
         {
@@ -41,11 +76,6 @@ namespace HSE.ComputerGraphics.Paint.UI
         {
             Line.Stroke = Brushes.Black;
             IsSelected = false;
-        }
-
-        public object Clone()
-        {
-            return this.MemberwiseClone();
         }
 
         public List<Line> GetLines()

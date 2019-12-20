@@ -14,6 +14,10 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using HSE.ComputerGraphics.Paint.UI;
 using Microsoft.Win32;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.IO;
+using System.Xml.Serialization;
 
 namespace HSE.ComputerGraphics.Paint
 {
@@ -52,7 +56,7 @@ namespace HSE.ComputerGraphics.Paint
         private void btnAddLine_Click(object sender, RoutedEventArgs e)
         {
             Line newLine = GetRandomLine();
-            MyLine line = new MyLine { Line = newLine };
+            MyLine line = new MyLine(newLine);
             lines.Add(newLine, line);
 
             MainCanvas.Children.Add(newLine);
@@ -68,7 +72,7 @@ namespace HSE.ComputerGraphics.Paint
                 if (lastClickedLine != null)
                 {
                     Line median = lastClickedLine.GetMedian(e.GetPosition(canvas));
-                    MyLine line = new MyLine { Line = median };
+                    MyLine line = new MyLine(median);
                     lines.Add(median, line);
                     MainCanvas.Children.Add(median);
 
@@ -83,7 +87,7 @@ namespace HSE.ComputerGraphics.Paint
                 if (lastClickedLine != null)
                 {
                     Line height = lastClickedLine.GetHeight(e.GetPosition(canvas));
-                    MyLine line = new MyLine { Line = height };
+                    MyLine line = new MyLine(height);
                     lines.Add(height, line);
                     MainCanvas.Children.Add(height);
 
@@ -97,7 +101,7 @@ namespace HSE.ComputerGraphics.Paint
 
             if (hitTestResult.VisualHit is Line selectedLine)
             {
-                if (morphingLine!= null && selectedLine == morphingLine)
+                if (morphingLine != null && selectedLine == morphingLine)
                     return;
                 ICanvasObject myLine = lines[selectedLine];
 
@@ -307,7 +311,7 @@ namespace HSE.ComputerGraphics.Paint
             if (currentSelection.Count == 2 && currentSelection.First() is MyLine first && currentSelection.Last() is MyLine second)
             {
                 Line bisect = LineExtension.GetBisector(first.Line, second.Line);
-                MyLine line = new MyLine { Line = bisect };
+                MyLine line = new MyLine(bisect);
                 lines.Add(bisect, line);
                 MainCanvas.Children.Add(bisect);
             }
@@ -365,7 +369,7 @@ namespace HSE.ComputerGraphics.Paint
                 };
 
                 MainCanvas.Children.Add(morphingLine);
-            }            
+            }
         }
 
         private double MorphingValue(double begin, double end, double t)
@@ -376,9 +380,9 @@ namespace HSE.ComputerGraphics.Paint
         private void menuLoad_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog ofd = new OpenFileDialog();
-            if(ofd.ShowDialog() == true)
+            if (ofd.ShowDialog() == true)
             {
-
+                LoadScene(ofd.FileName);
             }
         }
 
@@ -393,7 +397,51 @@ namespace HSE.ComputerGraphics.Paint
 
         private void SaveScene(string filename)
         {
+            using (FileStream fs = new FileStream(filename, FileMode.OpenOrCreate))
+            {
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                List<ICanvasObject> linesWithoutGroups = lines.Values.Where(x => x is MyLine).ToList();
+                binaryFormatter.Serialize(fs, linesWithoutGroups);
+                binaryFormatter.Serialize(fs, lineGroups);
+                MessageBox.Show("Save completed!");
+            }
+        }
 
+        private void LoadScene(string filename)
+        {
+            lines.Clear();
+            lineGroups.Clear();
+            MainCanvas.Children.Clear();
+            currentSelection.Clear();
+            lastClickedLine = null;
+
+            using (FileStream fs = new FileStream(filename, FileMode.OpenOrCreate))
+            {
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                List<ICanvasObject> linesWithoutGroups = (List<ICanvasObject>)binaryFormatter.Deserialize(fs);
+                lineGroups = (List<LineGroup>)binaryFormatter.Deserialize(fs);
+
+                foreach (var line in linesWithoutGroups)
+                {
+                    MyLine myLine = line as MyLine;
+                    myLine.SetLineValues();
+                    MainCanvas.Children.Add(myLine.Line);
+                    lines.Add(myLine.Line, myLine);
+                }
+
+                foreach (var group in lineGroups)
+                {
+                    LineGroup myGroup = group as LineGroup;
+                    foreach (var line in myGroup.Lines)
+                    {
+                        line.SetLineValues();
+                        MainCanvas.Children.Add(line.Line);
+                        lines.Add(line.Line, myGroup);
+                    }
+                }
+
+                MessageBox.Show("Load completed!");
+            }
         }
     }
 }
