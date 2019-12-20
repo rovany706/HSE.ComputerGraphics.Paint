@@ -35,6 +35,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DesignTimeProperties.WPF, Version=1.0.0.0, Culture=neutral, PublicKeyToken=23b8ce3a92a0a872, processorArchitecture=MSIL">
+      <HintPath>..\packages\Caliburn.Micro-Contrib.1.0.2\lib\Net40\DesignTimeProperties.WPF.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -56,7 +60,10 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="UI\AxesDrawer.cs" />
+    <Compile Include="UI\ICanvasObject.cs" />
     <Compile Include="UI\Line.cs" />
+    <Compile Include="UI\LineGroup.cs" />
+    <Compile Include="UI\MyLine.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

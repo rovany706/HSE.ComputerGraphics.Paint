@@ -56,6 +56,7 @@
                     <Button x:Name="btnAddLine" Content="Add line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnAddLine_Click" />
                     <Button x:Name="btnRemoveLine" Content="Remove line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnRemoveLine_Click" />
                     <Button x:Name="btnLmao" Content="lmao" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnLmao_Click" />
+                    <Button x:Name="btnGroup" Content="Group" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnGroup_Click" />
                 </StackPanel>
             </GroupBox>
 

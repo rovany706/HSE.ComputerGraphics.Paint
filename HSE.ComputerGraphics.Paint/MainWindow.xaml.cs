@@ -18,7 +18,11 @@ namespace HSE.ComputerGraphics.Paint
 {
     public partial class MainWindow : Window
     {
-        private Shape currentSelection;
+        private Line lastClickedLine;
+        private List<MyLine> currentSelection = new List<MyLine>();
+        private List<LineGroup> currentGroupSelection = new List<LineGroup>();
+        private List<LineGroup> lineGroups = new List<LineGroup>();
+        private Dictionary<Line, MyLine> lines = new Dictionary<Line, MyLine>();
         private Point previousMousePosition;
         private bool isMousePressed;
 
@@ -29,7 +33,11 @@ namespace HSE.ComputerGraphics.Paint
 
         private void btnAddLine_Click(object sender, RoutedEventArgs e)
         {
-            MainCanvas.Children.Add(GetRandomLine());
+            Line newLine = GetRandomLine();
+            MyLine line = new MyLine { Line = newLine };
+            lines.Add(newLine, line);
+
+            MainCanvas.Children.Add(newLine);
         }
 
         private void MainCanvas_MouseDown(object sender, MouseButtonEventArgs e)
@@ -40,20 +48,40 @@ namespace HSE.ComputerGraphics.Paint
 
             HitTestResult hitTestResult = VisualTreeHelper.HitTest(canvas, e.GetPosition(canvas));
 
-            if (currentSelection != null)
+            if (hitTestResult.VisualHit is Line selectedLine)
             {
-                //Deselect old element
-                currentSelection.Stroke = Brushes.Black;
-                currentSelection = null;
-                lbEquation.Text = String.Empty;
-            }
-            if (hitTestResult.VisualHit is Shape)
-            {
-                //Select new element
-                currentSelection = hitTestResult.VisualHit as Shape;
-                currentSelection.Stroke = Brushes.Red;
+                MyLine myLine = lines[selectedLine];
 
-                lbEquation.Text = $"Уравнение: {((Line)currentSelection).GetLineConstants()}";
+                if (Keyboard.IsKeyDown(Key.LeftCtrl) == false)
+                {
+                    foreach (var line in currentSelection)
+                        line.Deselect();
+                    currentSelection.Clear();
+                    currentGroupSelection.Clear();
+                }
+
+                //Select new element
+                if (currentSelection.Contains(myLine) == false)
+                {
+                    if (myLine.Group != null)
+                    {
+                        LineGroup group = lineGroups.Find(x => myLine.Group == x);
+                        group.Select();
+                        currentSelection.AddRange(group.Lines);
+                        currentGroupSelection.Add(group);
+                    }
+                    else
+                        currentSelection.Add(myLine);
+                    currentSelection.Last().Select();
+                    lastClickedLine = selectedLine;
+                    lbEquation.Text = $"Уравнение: {lastClickedLine.GetLineConstants()}";
+                }
+            }
+            else if (hitTestResult.VisualHit is Canvas)
+            {
+                foreach (var line in currentSelection)
+                    line.Deselect();
+                currentSelection.Clear();
             }
 
             //Save mouse position
@@ -72,44 +100,45 @@ namespace HSE.ComputerGraphics.Paint
             Point cartesianPosition = ConvertToCartesianCoords(MainCanvas, currentMousePosition);
             lbMousePosition.Text = $"X: {cartesianPosition.X} Y:{cartesianPosition.Y}";
 
-            if (currentSelection != null)
+            if (currentSelection.Any())
             {
-                Line line = currentSelection as Line;
-
-                lbEquation.Text = $"Уравнение: {line.GetLineConstants()}";
+                MyLine currentLine = lines[lastClickedLine];
+                lbEquation.Text = $"Уравнение: {lastClickedLine.GetLineConstants()}";
 
                 float radius = 10;
-                bool isMouseNearBegin = Math.Pow(line.X1 - previousMousePosition.X, 2) + Math.Pow(line.Y1 - previousMousePosition.Y, 2) < Math.Pow(radius, 2);
-                bool isMouseNearEnd = Math.Pow(line.X2 - previousMousePosition.X, 2) + Math.Pow(line.Y2 - previousMousePosition.Y, 2) < Math.Pow(radius, 2);
+                bool isMouseNearBegin = Math.Pow(lastClickedLine.X1 - previousMousePosition.X, 2) + Math.Pow(lastClickedLine.Y1 - previousMousePosition.Y, 2) < Math.Pow(radius, 2);
+                bool isMouseNearEnd = Math.Pow(lastClickedLine.X2 - previousMousePosition.X, 2) + Math.Pow(lastClickedLine.Y2 - previousMousePosition.Y, 2) < Math.Pow(radius, 2);
 
                 if (isMouseNearBegin || isMouseNearEnd)
-                    line.Cursor = Cursors.SizeNWSE;
+                    lastClickedLine.Cursor = Cursors.SizeNWSE;
                 else
-                    line.Cursor = Cursors.SizeAll;
+                    lastClickedLine.Cursor = Cursors.SizeAll;
 
                 if (isMousePressed)
                 {
                     if (isMouseNearBegin)
                     {
-                        line.X1 = currentMousePosition.X;
-                        line.Y1 = currentMousePosition.Y;
+                        lastClickedLine.X1 = currentMousePosition.X;
+                        lastClickedLine.Y1 = currentMousePosition.Y;
                     }
                     else if (isMouseNearEnd)
                     {
-                        line.X2 = currentMousePosition.X;
-                        line.Y2 = currentMousePosition.Y;
+                        lastClickedLine.X2 = currentMousePosition.X;
+                        lastClickedLine.Y2 = currentMousePosition.Y;
                     }
                     else
                     {
                         Vector delta = previousMousePosition - currentMousePosition;
-                        line.X1 -= delta.X;
-                        line.X2 -= delta.X;
-                        line.Y1 -= delta.Y;
-                        line.Y2 -= delta.Y;
+                        if (currentLine.Group != null)
+                            currentLine.Group.Move(delta);
+                        else
+                            currentLine.Move(delta);
                     }
                 }
             }
+
             previousMousePosition = currentMousePosition;
+
         }
 
         private void MainCanvas_MouseUp(object sender, MouseButtonEventArgs e)
@@ -119,11 +148,27 @@ namespace HSE.ComputerGraphics.Paint
 
         private void btnRemoveLine_Click(object sender, RoutedEventArgs e)
         {
-            if (currentSelection == null)
+            if (currentSelection.Any() == false)
                 return;
 
-            MainCanvas.Children.Remove(currentSelection);
-            currentSelection = null;
+            List<LineGroup> groupsToDelete = new List<LineGroup>();
+            foreach (var line in currentSelection)
+            {
+                MainCanvas.Children.Remove(line.Line);
+                if (line.Group != null)
+                {
+                    if(groupsToDelete.Contains(line.Group) == false)
+                        groupsToDelete.Add(line.Group);
+                }
+                
+                lines.Remove(line.Line);
+            }
+            foreach (var group in groupsToDelete)
+            {
+                lineGroups.Remove(group);
+            }
+
+            currentSelection.Clear();
             lbEquation.Text = "";
         }
 
@@ -175,6 +220,12 @@ namespace HSE.ComputerGraphics.Paint
             myVisualBrush.Visual = myMediaElement;
 
             MainCanvas.Background = myVisualBrush;
+        }
+
+        private void btnGroup_Click(object sender, RoutedEventArgs e)
+        {
+            LineGroup newLineGroup = new LineGroup(lines.Values.Where(x => x.IsSelected == true).ToList());
+            lineGroups.Add(newLineGroup);
         }
     }
 }
