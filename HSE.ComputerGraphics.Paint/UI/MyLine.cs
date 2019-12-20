@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
@@ -14,6 +15,7 @@ namespace HSE.ComputerGraphics.Paint.UI
         public Line Line { get; set; }
         public LineGroup Group { get; set; }
         public bool IsSelected { get; set; }
+        public bool Z { get; set; }
 
         public override int GetHashCode()
         {
@@ -30,35 +32,24 @@ namespace HSE.ComputerGraphics.Paint.UI
 
         public void Select()
         {
-            //if (Group != null)
-            //{
-            //    foreach (MyLine myLine in Group.Lines)
-            //    {
-            //        myLine.Line.Stroke = Brushes.Red;
-            //    }
-            //}
-
             Line.Stroke = Brushes.Red;
             IsSelected = true;
         }
 
         public void Deselect()
         {
-            //if (Group != null)
-            //{
-            //    foreach (MyLine myLine in Group.Lines)
-            //    {
-            //        myLine.Line.Stroke = Brushes.Black;
-            //    }
-            //}
-            //else
-                Line.Stroke = Brushes.Black;
+            Line.Stroke = Brushes.Black;
             IsSelected = false;
         }
 
         public object Clone()
         {
             return this.MemberwiseClone();
+        }
+
+        public List<Line> GetLines()
+        {
+            return new List<Line> { Line };
         }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Shapes;
 
 namespace HSE.ComputerGraphics.Paint.UI
 {
@@ -12,5 +13,6 @@ namespace HSE.ComputerGraphics.Paint.UI
         void Move(Vector delta);
         void Select();
         void Deselect();
+        List<Line> GetLines();
     }
 }

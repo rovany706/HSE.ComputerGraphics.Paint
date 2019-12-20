@@ -30,9 +30,11 @@
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition/>
+                <RowDefinition/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
 
-            <Canvas x:Name="MainCanvas" Grid.Column="0" Grid.RowSpan="2" MouseDown="MainCanvas_MouseDown" MouseMove="MainCanvas_MouseMove" MouseUp="MainCanvas_MouseUp" Margin="0,0,39,0" SizeChanged="MainCanvas_SizeChanged">
+            <Canvas x:Name="MainCanvas" Grid.Column="0" Grid.RowSpan="4" MouseDown="MainCanvas_MouseDown" MouseMove="MainCanvas_MouseMove" MouseUp="MainCanvas_MouseUp" Margin="0,0,39,0" SizeChanged="MainCanvas_SizeChanged">
                 <!--Grid 50x50-->
                 <Canvas.Background>
                     <DrawingBrush TileMode="Tile" Viewport="0,0,50,50" ViewportUnits="Absolute">
@@ -57,17 +59,33 @@
                     <Button x:Name="btnRemoveLine" Content="Remove line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnRemoveLine_Click" />
                     <Button x:Name="btnLmao" Content="lmao" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnLmao_Click" />
                     <Button x:Name="btnGroup" Content="Group" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnGroup_Click" />
+                    <Button x:Name="btnUngroup" Content="Ungroup" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnUngroup_Click" />
                 </StackPanel>
             </GroupBox>
-
             <GroupBox Grid.Row="1" BorderBrush="Gainsboro" Background="White" BorderThickness="1" Grid.Column="1">
                 <GroupBox.Header>Properties</GroupBox.Header>
                 <StackPanel>
                     <TextBlock x:Name="lbEquation" TextWrapping="WrapWithOverflow" />
                 </StackPanel>
             </GroupBox>
+            <GroupBox Grid.Row="2" BorderBrush="Gainsboro" Background="White" BorderThickness="1" Grid.Column="1">
+                <GroupBox.Header>Lines</GroupBox.Header>
+                <StackPanel>
+                    <Button x:Name="btnMedian" Content="Median" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnMedian_Click" />
+                    <Button x:Name="btnHeight" Content="Height" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnHeight_Click" />
+                    <Button x:Name="btnBisector" Content="Bisector" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnBisector_Click" />
+                </StackPanel>
+            </GroupBox>
+            <GroupBox Grid.Row="3" BorderBrush="Gainsboro" Background="White" BorderThickness="1" Grid.Column="1">
+                <GroupBox.Header>Morphing</GroupBox.Header>
+                <StackPanel>
+                    <Button x:Name="btnMorphingFirstLine" Content="1 line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnMorphingFirstLine_Click" />
+                    <Button x:Name="btnMorphingSecondLine" Content="2 line" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnMorphingSecondLine_Click" />
+                    <Button x:Name="btnMorphingReset" Content="Reset" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="116" Click="btnMorphingReset_Click" />
+                </StackPanel>
+            </GroupBox>
         </Grid>
-        <StatusBar Grid.Row="2" Height="25">
+        <StatusBar Grid.Row="4" Height="25">
             <StatusBarItem>
                 <TextBlock x:Name="lbMousePosition"></TextBlock>
             </StatusBarItem>

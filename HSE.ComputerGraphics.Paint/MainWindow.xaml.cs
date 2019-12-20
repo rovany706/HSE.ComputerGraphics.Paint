@@ -19,12 +19,15 @@ namespace HSE.ComputerGraphics.Paint
     public partial class MainWindow : Window
     {
         private Line lastClickedLine;
-        private List<MyLine> currentSelection = new List<MyLine>();
+        private List<ICanvasObject> currentSelection = new List<ICanvasObject>();
         private List<LineGroup> currentGroupSelection = new List<LineGroup>();
         private List<LineGroup> lineGroups = new List<LineGroup>();
-        private Dictionary<Line, MyLine> lines = new Dictionary<Line, MyLine>();
+        private Dictionary<Line, ICanvasObject> lines = new Dictionary<Line, ICanvasObject>();
         private Point previousMousePosition;
         private bool isMousePressed;
+        private bool medianMode;
+        private bool heightMode;
+        private Line morphingLine;
 
         public MainWindow()
         {
@@ -45,12 +48,41 @@ namespace HSE.ComputerGraphics.Paint
             Canvas canvas = sender as Canvas;
             if (canvas == null)
                 return;
+            if (medianMode)
+            {
+                if (lastClickedLine != null)
+                {
+                    Line median = lastClickedLine.GetMedian(e.GetPosition(canvas));
+                    MyLine line = new MyLine { Line = median };
+                    lines.Add(median, line);
+                    MainCanvas.Children.Add(median);
+
+                    medianMode = false;
+                }
+
+                return;
+            }
+
+            if (heightMode)
+            {
+                if (lastClickedLine != null)
+                {
+                    Line height = lastClickedLine.GetHeight(e.GetPosition(canvas));
+                    MyLine line = new MyLine { Line = height };
+                    lines.Add(height, line);
+                    MainCanvas.Children.Add(height);
+
+                    heightMode = false;
+                }
+
+                return;
+            }
 
             HitTestResult hitTestResult = VisualTreeHelper.HitTest(canvas, e.GetPosition(canvas));
 
             if (hitTestResult.VisualHit is Line selectedLine)
             {
-                MyLine myLine = lines[selectedLine];
+                ICanvasObject myLine = lines[selectedLine];
 
                 if (Keyboard.IsKeyDown(Key.LeftCtrl) == false)
                 {
@@ -63,15 +95,8 @@ namespace HSE.ComputerGraphics.Paint
                 //Select new element
                 if (currentSelection.Contains(myLine) == false)
                 {
-                    if (myLine.Group != null)
-                    {
-                        LineGroup group = lineGroups.Find(x => myLine.Group == x);
-                        group.Select();
-                        currentSelection.AddRange(group.Lines);
-                        currentGroupSelection.Add(group);
-                    }
-                    else
-                        currentSelection.Add(myLine);
+                    myLine.Select();
+                    currentSelection.Add(myLine);
                     currentSelection.Last().Select();
                     lastClickedLine = selectedLine;
                     lbEquation.Text = $"Уравнение: {lastClickedLine.GetLineConstants()}";
@@ -102,7 +127,7 @@ namespace HSE.ComputerGraphics.Paint
 
             if (currentSelection.Any())
             {
-                MyLine currentLine = lines[lastClickedLine];
+                ICanvasObject currentLine = lines[lastClickedLine];
                 lbEquation.Text = $"Уравнение: {lastClickedLine.GetLineConstants()}";
 
                 float radius = 10;
@@ -129,10 +154,7 @@ namespace HSE.ComputerGraphics.Paint
                     else
                     {
                         Vector delta = previousMousePosition - currentMousePosition;
-                        if (currentLine.Group != null)
-                            currentLine.Group.Move(delta);
-                        else
-                            currentLine.Move(delta);
+                        currentLine.Move(delta);
                     }
                 }
             }
@@ -151,21 +173,11 @@ namespace HSE.ComputerGraphics.Paint
             if (currentSelection.Any() == false)
                 return;
 
-            List<LineGroup> groupsToDelete = new List<LineGroup>();
             foreach (var line in currentSelection)
             {
-                MainCanvas.Children.Remove(line.Line);
-                if (line.Group != null)
-                {
-                    if(groupsToDelete.Contains(line.Group) == false)
-                        groupsToDelete.Add(line.Group);
-                }
-                
-                lines.Remove(line.Line);
-            }
-            foreach (var group in groupsToDelete)
-            {
-                lineGroups.Remove(group);
+                List<Line> linesToDelete = line.GetLines();
+                foreach (var lineToDelete in linesToDelete)
+                    MainCanvas.Children.Remove(lineToDelete);
             }
 
             currentSelection.Clear();
@@ -224,8 +236,79 @@ namespace HSE.ComputerGraphics.Paint
 
         private void btnGroup_Click(object sender, RoutedEventArgs e)
         {
-            LineGroup newLineGroup = new LineGroup(lines.Values.Where(x => x.IsSelected == true).ToList());
+            LineGroup newLineGroup = new LineGroup(currentSelection);
+            foreach (var myLine in currentSelection)
+            {
+                foreach (var line in myLine.GetLines())
+                {
+                    lines[line] = newLineGroup;
+                }
+            }
             lineGroups.Add(newLineGroup);
+            currentSelection.Clear();
+            currentSelection.Add(lineGroups.Last());
+        }
+
+        private void btnUngroup_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentSelection.Count == 1)
+            {
+                if (currentSelection.First() is LineGroup group)
+                {
+                    lineGroups.Remove(group);
+                    foreach (var lastState in group.GroupedObjects)
+                    {
+                        if (lastState is LineGroup gr)
+                        {
+                            lineGroups.Add(gr);
+                            foreach (var line in gr.GetLines())
+                            {
+                                lines[line] = gr;
+                            }
+                        }
+                        else if (lastState is MyLine line)
+                        {
+                            lines[line.Line] = line;
+                        }
+                    }
+                }
+            }
+        }
+
+        private void btnMedian_Click(object sender, RoutedEventArgs e)
+        {
+            medianMode = true;
+        }
+
+        private void btnHeight_Click(object sender, RoutedEventArgs e)
+        {
+            heightMode = true;
+        }
+
+        private void btnBisector_Click(object sender, RoutedEventArgs e)
+        {
+            if (currentSelection.Count == 2 && currentSelection.First() is MyLine first && currentSelection.Last() is MyLine second)
+            {
+                Line bisect = LineExtension.GetBisector(first.Line, second.Line);
+                MyLine line = new MyLine { Line = bisect };
+                lines.Add(bisect, line);
+                MainCanvas.Children.Add(bisect);
+            }
+        }
+
+        private void btnMorphingFirstLine_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnMorphingSecondLine_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btnMorphingReset_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

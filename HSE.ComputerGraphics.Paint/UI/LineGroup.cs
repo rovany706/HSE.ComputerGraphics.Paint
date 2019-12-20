@@ -12,28 +12,27 @@ namespace HSE.ComputerGraphics.Paint.UI
     public class LineGroup : ICanvasObject
     {
         public List<MyLine> Lines { get; set; }
-        public LineGroup LastState { get; set; }
+        public List<ICanvasObject> GroupedObjects { get; set; }
 
-        public LineGroup(List<MyLine> lines)
+        public LineGroup(List<ICanvasObject> lines)
         {
             Lines = new List<MyLine>();
 
-            foreach (var line in lines)
+            foreach (ICanvasObject canvasObject in lines)
             {
-                Lines.Add(line);
-                Lines.Last().Group = this;
+                if (canvasObject is MyLine line)
+                {
+                    line.Group = this;
+                    Lines.Add(line);
+                }
+                else if (canvasObject is LineGroup group)
+                {
+                    Lines.AddRange(group.Lines);
+                }
             }
-            //foreach (ICanvasObject canvasObject in lines)
-            //{
-            //    if (canvasObject is MyLine line)
-            //    {
-            //        Lines.Add(line);
-            //    }
-            //    else if (canvasObject is LineGroup group)
-            //    {
-            //        Lines.AddRange(group.Lines);
-            //    }
-            //}
+
+            GroupedObjects = new List<ICanvasObject>();
+            GroupedObjects.AddRange(lines);
         }
 
         public void Move(Vector delta)
@@ -54,6 +53,11 @@ namespace HSE.ComputerGraphics.Paint.UI
         public override int GetHashCode()
         {
             return Lines.Sum(x => x.GetHashCode());
+        }
+
+        public List<Line> GetLines()
+        {
+            return Lines.Select(x => x.Line).ToList();
         }
     }
 }
