@@ -379,7 +379,7 @@ namespace HSE.ComputerGraphics.Paint
 
         private void menuLoad_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog ofd = new OpenFileDialog();
+            OpenFileDialog ofd = new OpenFileDialog { Filter = "bin files (*.bin)|*.bin" };
             if (ofd.ShowDialog() == true)
             {
                 LoadScene(ofd.FileName);
@@ -388,7 +388,7 @@ namespace HSE.ComputerGraphics.Paint
 
         private void menuSave_Click(object sender, RoutedEventArgs e)
         {
-            SaveFileDialog sfd = new SaveFileDialog();
+            SaveFileDialog sfd = new SaveFileDialog { Filter = "bin files (*.bin)|*.bin" };
             if (sfd.ShowDialog() == true)
             {
                 SaveScene(sfd.FileName);
